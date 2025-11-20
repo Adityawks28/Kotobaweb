@@ -1,0 +1,15 @@
+# File Binary hasil build (DONT UPLOAD)
+main
+main.exe
+*.exe
+
+# File Environment (DONT UPLOAD)
+.env
+
+# File Sampah Mac/Windows
+.DS_Store
+Thumbs.db
+
+# Folder IDE (VSCode/JetBrains)
+.vscode/
+.idea/

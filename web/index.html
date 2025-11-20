@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Kotoba Story</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    /* Simple animation for the dialogue bubble */
+    .pop-in { animation: pop 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+    @keyframes pop { 0% { transform: scale(0.8); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
+  </style>
+</head>
+
+<body class="bg-[#faf7f2] text-slate-800 font-sans">
+  
+  <div class="max-w-md mx-auto h-screen flex flex-col bg-white shadow-2xl relative overflow-hidden">
+    
+    <header id="header" class="p-5 flex items-center justify-between bg-white z-10">
+      <div>
+        <h1 id="headerTitle" class="text-2xl font-bold text-slate-800">Halo, Aditya!</h1>
+        <div class="flex gap-2 mt-1" id="chips"></div>
+      </div>
+      <div class="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center text-xl border-2 border-white shadow-sm">
+        👤
+      </div>
+    </header>
+
+    <main class="flex-1 overflow-y-auto bg-[#faf7f2] relative">
+
+      <section id="view-home" class="p-5 space-y-6">
+        <div id="lessonPath" class="space-y-4 pb-24"></div>
+      </section>
+
+      <section id="view-lesson" class="hidden absolute inset-0 bg-[url('https://images.unsplash.com/photo-1555899434-94d1368d7efe?q=80&w=1000&auto=format&fit=crop')] bg-cover bg-center flex flex-col">
+        
+        <div id="aiTutorPanel" class="hidden absolute bottom-0 left-0 right-0 bg-white rounded-t-3xl shadow-[0_-5px_20px_rgba(0,0,0,0.1)] p-4 z-50 h-1/2 flex flex-col">
+    
+            <div class="flex justify-between items-center mb-2 border-b pb-2">
+                <div class="flex items-center gap-2">
+                    <span class="text-2xl">🤖</span>
+                    <span class="font-bold text-slate-700">AI Tutor</span>
+                </div>
+                <button onclick="toggleChat()" class="text-slate-400 text-xl">✕</button>
+            </div>
+        
+            <div id="chatHistory" class="flex-1 overflow-y-auto space-y-3 p-2 text-sm">
+                <div class="bg-blue-50 p-3 rounded-lg text-slate-700">
+                    Halo! Ada yang bingung? Tanya saja tentang grammar atau kosakata di sini.
+                </div>
+            </div>
+        
+            <div class="mt-2 flex gap-2">
+                <input id="chatInput" type="text" placeholder="Kenapa jawabannya A?" 
+                       class="flex-1 border border-slate-300 rounded-full px-4 py-2 focus:outline-none focus:border-blue-500">
+                <button onclick="sendToAI()" class="bg-blue-500 text-white w-10 h-10 rounded-full flex items-center justify-center">
+                    ➤
+                </button>
+            </div>
+        </div>
+        
+        <button onclick="toggleChat()" class="absolute top-4 right-4 z-20 bg-white/90 p-2 rounded-full shadow-lg text-xl">
+            🤖
+        </button>
+        
+        <div class="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/60 to-transparent"></div>
+
+        <div class="relative z-10 p-4 flex items-center gap-3">
+            <button onclick="show('home')" class="text-white/80 text-2xl">✕</button>
+            <div class="flex-1 h-2 bg-white/20 rounded-full overflow-hidden">
+                <div id="lessonProgress" class="h-full bg-green-400 w-1/4 transition-all duration-500"></div>
+            </div>
+        </div>
+
+        <div class="flex-1 relative z-10 flex flex-col items-center justify-end pb-6">
+            <div id="charAvatar" class="text-[120px] drop-shadow-2xl transition-transform duration-300 origin-bottom">
+                👩
+            </div>
+            <img id="reactionImage" src="" alt="Character Reaction" class="absolute bottom-0 h-[65vh] w-auto max-w-none object-contain transition-opacity duration-300 opacity-0" style="left: 50%; transform: translateX(-50%); z-index: 0;">         
+    </div>
+
+        <div class="relative z-10 bg-white rounded-t-3xl p-6 pb-10 min-h-[40%] flex flex-col justify-between">
+            
+            <div class="mb-6">
+                <div class="flex items-baseline gap-2 mb-1">
+                    <span id="charName" class="font-bold text-blue-600 uppercase tracking-wider text-sm">Sari</span>
+                </div>
+                <p id="charDialogue" class="text-xl text-slate-800 font-medium leading-relaxed">...</p>
+            </div>
+
+            
+            <div id="optionsContainer" class="space-y-3 w-full">
+                <div id="choiceArea" class="space-y-3 w-full"></div>
+            
+                <div id="inputArea" class="hidden w-full space-y-3">
+                    <textarea id="userTextInput" rows="3" placeholder="Tulis jawabanmu di sini..." 
+                        class="w-full p-4 rounded-xl border-2 border-slate-200 focus:border-blue-500 focus:outline-none text-lg"></textarea>
+                    <button onclick="submitTextAnswer()" class="w-full py-3 bg-blue-500 text-white font-bold rounded-xl shadow-lg active:scale-95 transition-transform">
+                        Kirim Jawaban ➤
+                    </button>
+                </div>
+            </div>
+
+            <button id="nextBtn" class="hidden w-full py-4 bg-green-500 hover:bg-green-600 text-white font-bold rounded-xl shadow-lg shadow-green-500/30 transition-all transform active:scale-95">
+                Continue
+            </button>
+        </div>
+      </section>
+
+    </main>
+
+    <nav id="navbar" class="p-4 bg-white border-t border-slate-100">
+      <div class="flex justify-around text-2xl">
+        <button class="opacity-100">🏠</button>
+        <button class="opacity-40">📚</button>
+        <button class="opacity-40">👤</button>
+      </div>
+    </nav>
+
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
