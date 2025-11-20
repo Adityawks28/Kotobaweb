@@ -30,7 +30,7 @@ How to Run locally
 
 1. Clone the repository
    bash
-   git clone [https://github.com/USERNAME_KAMU/kotobaweb.git](https://github.com/USERNAME_KAMU/kotobaweb.git)
+   git clone [https://github.com/USERNAME_KAMU/kotobaweb.git](https://github.com/YOUR_USERNAME/kotobaweb.git)
    cd kotobaweb
 2. Get your Gemini API Key (Google AI Studio)
 3. Run Server
